@@ -1,0 +1,33 @@
+id = "languagetool"
+name = "LanguageTool"
+version = "0.1.0"
+description = "Grammar and style checking for Zed using LanguageTool."
+authors = ["Maxim Schuwalow"]
+license = "MIT"
+schema_version = 1
+repository = "https://github.com/mschuwalow/languagetool-zed-extension"
+
+[language_servers.languagetool]
+name = "LanguageTool"
+languages = [
+  "AsciiDoc",
+  "C",
+  "C++",
+  "CSS",
+  "Go",
+  "HTML",
+  "Java",
+  "JavaScript",
+  "JavaScript React",
+  "Markdown",
+  "MDX",
+  "Python",
+  "Plain Text",
+  "LaTeX",
+  "Rust",
+  "Shell Script",
+  "TSX",
+  "Typst",
+  "TypeScript",
+  "TypeScript React",
+]

@@ -1,0 +1,17 @@
+[package]
+name = "zed-languagetool"
+version = "0.1.0"
+edition = "2021"
+authors = ["Maxim Schuwalow"]
+description = "LanguageTool integration for Zed."
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+zed_extension_api = "<1"
+
+[profile.release]
+lto = "thin"
