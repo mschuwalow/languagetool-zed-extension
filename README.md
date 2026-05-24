@@ -4,11 +4,16 @@ LanguageTool integration for Zed. The Zed extension launches a Rust language ser
 
 ## Local Development
 
-Run a LanguageTool server on `localhost:8081`, then build the language server from the sibling `languagetool-lsp` repository:
+Run extension checks:
+
+```sh
+cargo make check
+```
+
+Run a LanguageTool server on `localhost:8081`, then build the language server from the sibling `languagetool-lsp` repository and add it to the PATH.
 
 ```sh
 cargo build --manifest-path ../languagetool-lsp/Cargo.toml -p languagetool-lsp
-cp ../languagetool-lsp/target/debug/languagetool-lsp .
 ```
 
 Install this repository as a Zed dev extension. The extension prefers a `languagetool-lsp` on `PATH`, then a downloaded release binary.

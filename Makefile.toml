@@ -1,0 +1,56 @@
+[config]
+default_to_workspace = false
+
+[env]
+WASM_TARGET = "wasm32-wasip2"
+
+[tasks.ci]
+clear = true
+description = "Run CI checks."
+dependencies = ["check"]
+
+[tasks.check]
+clear = true
+description = "Run the standard extension verification checks."
+dependencies = ["check-rustfmt", "check-clippy", "check-wasm"]
+
+[tasks.check-rustfmt]
+command = "cargo"
+args = ["fmt", "--all", "--", "--check"]
+
+[tasks.check-clippy]
+command = "cargo"
+args = ["clippy", "-p", "zed-languagetool", "--target", "${WASM_TARGET}", "--", "-D", "warnings"]
+
+[tasks.check-wasm]
+command = "cargo"
+args = ["check", "-p", "zed-languagetool", "--target", "${WASM_TARGET}"]
+
+[tasks.fix]
+clear = true
+description = "Runs rustfmt and clippy fixes."
+dependencies = ["fix-clippy", "fix-rustfmt"]
+
+[tasks.fix-rustfmt]
+description = "Runs rustfmt and applies fixes."
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.fix-clippy]
+description = "Runs clippy and applies fixes."
+install_crate = "clippy"
+command = "cargo"
+args = [
+  "clippy",
+  "-p",
+  "zed-languagetool",
+  "--target",
+  "${WASM_TARGET}",
+  "--fix",
+  "--allow-dirty",
+  "--allow-staged",
+  "--",
+  "-D",
+  "warnings",
+]
