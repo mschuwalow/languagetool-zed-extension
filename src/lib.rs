@@ -1,6 +1,5 @@
 use std::fs;
 use std::path::{Path, PathBuf};
-
 use zed_extension_api::{self as zed, settings::LspSettings, GithubRelease, Result};
 
 const LSP_NAME: &str = "languagetool-lsp";
@@ -16,15 +15,11 @@ struct LanguageToolExtension {
 #[derive(Clone)]
 struct LanguageToolBinary {
     path: PathBuf,
-    env: Vec<(String, String)>,
 }
 
 impl LanguageToolBinary {
-    fn new(path: PathBuf, log_level: &str) -> Self {
-        Self {
-            path,
-            env: vec![("RUST_LOG".to_string(), log_level.to_string())],
-        }
+    fn new(path: PathBuf) -> Self {
+        Self { path }
     }
 }
 
@@ -33,14 +28,15 @@ impl LanguageToolExtension {
         worktree
             .which(LSP_NAME)
             .map(PathBuf::from)
-            .map(|path| LanguageToolBinary::new(path, "info"))
+            .map(LanguageToolBinary::new)
     }
 
     fn get_cached_binary(&self) -> Option<LanguageToolBinary> {
         self.binary_cache
             .as_ref()
             .filter(|path| path.exists())
-            .map(|path| LanguageToolBinary::new(path.clone(), "info"))
+            .cloned()
+            .map(LanguageToolBinary::new)
     }
 
     fn get_binary(
@@ -132,7 +128,7 @@ impl LanguageToolExtension {
             self.cleanup_old_versions(&version_dir)?;
         }
 
-        Ok(LanguageToolBinary::new(binary_path, "info"))
+        Ok(LanguageToolBinary::new(binary_path))
     }
 
     fn load_existing_binary(&self) -> Result<LanguageToolBinary> {
@@ -144,7 +140,7 @@ impl LanguageToolExtension {
                 binary_path.display()
             ));
         }
-        Ok(LanguageToolBinary::new(binary_path, "info"))
+        Ok(LanguageToolBinary::new(binary_path))
     }
 
     fn read_version_file(&self) -> Result<String> {
@@ -278,7 +274,7 @@ impl zed::Extension for LanguageToolExtension {
                 format!("--root={}", worktree.root_path()),
                 "serve".to_string(),
             ],
-            env: binary.env,
+            env: Vec::new(),
         })
     }
 
