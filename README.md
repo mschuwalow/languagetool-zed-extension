@@ -94,7 +94,7 @@ After one of these commands updates `.zed/languagetool.json`, the server recheck
 
 ## Current Scope
 
-- Plain text, Markdown, MDX, HTML, LaTeX, Typst, and a conservative set of common code languages are registered in Zed.
+- Plain text, Markdown, MDX, HTML, and a conservative set of common code languages are registered in Zed.
 - Markdown and HTML are sent with LanguageTool `data.annotation`, marking code fences, inline code, links, tags, scripts, and styles as markup.
 - Code languages currently send comments as text annotations and code as markup, with Python triple-quoted strings treated as documentation.
 - Quick fixes are generated from LanguageTool replacements.

@@ -25,3 +25,19 @@ languages = [
   "TypeScript",
   "TypeScript React",
 ]
+
+[language_servers.languagetool.language_ids]
+"HTML" = "html"
+"Java" = "java"
+"JavaScript" = "javascript"
+"JavaScript React" = "javascriptreact"
+"Markdown" = "markdown"
+"MDX" = "mdx"
+"Nix" = "nix"
+"Python" = "python"
+"Plain Text" = "plaintext"
+"Rust" = "rust"
+"Scala" = "scala"
+"TSX" = "typescriptreact"
+"TypeScript" = "typescript"
+"TypeScript React" = "typescriptreact"
