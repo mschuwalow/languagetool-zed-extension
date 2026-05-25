@@ -10,24 +10,18 @@ repository = "https://github.com/mschuwalow/languagetool-zed-extension"
 [language_servers.languagetool]
 name = "LanguageTool"
 languages = [
-  "AsciiDoc",
-  "C",
-  "C++",
-  "CSS",
-  "Go",
   "HTML",
   "Java",
   "JavaScript",
   "JavaScript React",
   "Markdown",
   "MDX",
+  "Nix",
   "Python",
   "Plain Text",
-  "LaTeX",
   "Rust",
-  "Shell Script",
+  "Scala",
   "TSX",
-  "Typst",
   "TypeScript",
   "TypeScript React",
 ]
