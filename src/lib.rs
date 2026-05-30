@@ -12,44 +12,24 @@ struct LanguageToolExtension {
     binary_cache: Option<PathBuf>,
 }
 
-#[derive(Clone)]
-struct LanguageToolBinary {
-    path: PathBuf,
-}
-
-impl LanguageToolBinary {
-    fn new(path: PathBuf) -> Self {
-        Self { path }
-    }
-}
-
 impl LanguageToolExtension {
-    fn find_system_binary(&self, worktree: &zed::Worktree) -> Option<LanguageToolBinary> {
-        worktree
-            .which(LSP_NAME)
-            .map(PathBuf::from)
-            .map(LanguageToolBinary::new)
-    }
-
-    fn get_cached_binary(&self) -> Option<LanguageToolBinary> {
-        self.binary_cache
-            .as_ref()
-            .filter(|path| path.exists())
-            .cloned()
-            .map(LanguageToolBinary::new)
+    fn find_system_binary(&self, worktree: &zed::Worktree) -> Option<PathBuf> {
+        worktree.which(LSP_NAME).map(PathBuf::from)
     }
 
     fn get_binary(
         &mut self,
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
-    ) -> Result<LanguageToolBinary> {
-        if let Some(binary) = self.find_system_binary(worktree) {
-            return Ok(binary);
+    ) -> Result<PathBuf> {
+        if let Some(path) = self.find_system_binary(worktree) {
+            return Ok(path);
         }
 
-        if let Some(binary) = self.get_cached_binary() {
-            return Ok(binary);
+        if let Some(path) = &self.binary_cache {
+            if path.exists() {
+                return Ok(path.clone());
+            }
         }
 
         self.ensure_latest_binary(language_server_id)
@@ -58,7 +38,7 @@ impl LanguageToolExtension {
     fn ensure_latest_binary(
         &mut self,
         language_server_id: &zed::LanguageServerId,
-    ) -> Result<LanguageToolBinary> {
+    ) -> Result<PathBuf> {
         zed::set_language_server_installation_status(
             language_server_id,
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
@@ -82,13 +62,13 @@ impl LanguageToolExtension {
         };
 
         match result {
-            Ok(binary) => {
-                self.binary_cache = Some(binary.path.clone());
+            Ok(path) => {
+                self.binary_cache = Some(path.clone());
                 zed::set_language_server_installation_status(
                     language_server_id,
                     &zed::LanguageServerInstallationStatus::None,
                 );
-                Ok(binary)
+                Ok(path)
             }
             Err(err) => {
                 zed::set_language_server_installation_status(
@@ -117,7 +97,7 @@ impl LanguageToolExtension {
         Ok(Some(release))
     }
 
-    fn install_release(&self, release: &GithubRelease) -> Result<LanguageToolBinary> {
+    fn install_release(&self, release: &GithubRelease) -> Result<PathBuf> {
         let asset = self.find_compatible_asset(release)?;
         let version_dir = self.version_dir(&release.version);
         let binary_path = version_dir.join(self.binary_filename());
@@ -128,10 +108,10 @@ impl LanguageToolExtension {
             self.cleanup_old_versions(&version_dir)?;
         }
 
-        Ok(LanguageToolBinary::new(binary_path))
+        Ok(binary_path)
     }
 
-    fn load_existing_binary(&self) -> Result<LanguageToolBinary> {
+    fn load_existing_binary(&self) -> Result<PathBuf> {
         let version = self.read_version_file()?;
         let binary_path = self.version_dir(&version).join(self.binary_filename());
         if !binary_path.exists() {
@@ -140,7 +120,7 @@ impl LanguageToolExtension {
                 binary_path.display()
             ));
         }
-        Ok(LanguageToolBinary::new(binary_path))
+        Ok(binary_path)
     }
 
     fn read_version_file(&self) -> Result<String> {
@@ -261,19 +241,15 @@ impl zed::Extension for LanguageToolExtension {
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> Result<zed::Command> {
-        let binary = self.get_binary(language_server_id, worktree)?;
-        let command = binary
-            .path
+        let binary_path = self.get_binary(language_server_id, worktree)?;
+        let command = binary_path
             .to_str()
             .ok_or_else(|| "failed to convert binary path to string".to_string())?
             .to_string();
 
         Ok(zed::Command {
             command,
-            args: vec![
-                format!("--root={}", worktree.root_path()),
-                "serve".to_string(),
-            ],
+            args: Vec::new(),
             env: Vec::new(),
         })
     }
