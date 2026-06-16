@@ -89,3 +89,17 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.tag }}
           generate_release_notes: true
+
+  update-zed-extension:
+    name: Open Zed extensions PR
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Open update PR
+        uses: huacnlee/zed-extension-action@v2
+        with:
+          extension-name: languagetool
+          tag: ${{ needs.create-release.outputs.tag }}
+          push-to: mschuwalow/zed-extensions
+        env:
+          COMMITTER_TOKEN: ${{ secrets.ZED_EXTENSION_ACTION_TOKEN }}
