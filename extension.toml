@@ -1,4 +1,4 @@
-id = "languagetool"
+id = "languagetool-lsp"
 name = "LanguageTool"
 version = "0.1.0"
 description = "Grammar and style checking for Zed using LanguageTool."
@@ -7,7 +7,7 @@ license = "MIT"
 schema_version = 1
 repository = "https://github.com/mschuwalow/languagetool-zed-extension"
 
-[language_servers.languagetool]
+[language_servers.languagetool-lsp]
 name = "LanguageTool"
 languages = [
   "HTML",
@@ -26,7 +26,7 @@ languages = [
   "TypeScript React",
 ]
 
-[language_servers.languagetool.language_ids]
+[language_servers.languagetool-lsp.language_ids]
 "HTML" = "html"
 "Java" = "java"
 "JavaScript" = "javascript"

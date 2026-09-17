@@ -23,7 +23,7 @@ Example Zed settings:
 ```json
 {
   "lsp": {
-    "languagetool": {
+    "languagetool-lsp": {
       "initialization_options": {
         "backend": { "type": "local", "url": "http://localhost:8081" },
         "language": "en-US",
