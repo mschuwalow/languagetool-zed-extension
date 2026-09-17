@@ -1,6 +1,6 @@
 id = "languagetool-lsp"
 name = "LanguageTool"
-version = "0.1.0"
+version = "0.2.0"
 description = "Grammar and style checking for Zed using LanguageTool."
 authors = ["Maxim Schuwalow"]
 license = "MIT"
