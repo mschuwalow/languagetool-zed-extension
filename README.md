@@ -1,4 +1,4 @@
-# Zed LanguageTool
+# LanguageTool Zed Extension
 
 LanguageTool integration for Zed. The Zed extension launches a Rust language server, which sends document text to a local or cloud LanguageTool HTTP API and publishes diagnostics and quick fixes through LSP.
 
@@ -23,7 +23,7 @@ Example Zed settings:
 ```json
 {
   "lsp": {
-    "languagetool-lsp": {
+    "languagetool": {
       "initialization_options": {
         "backend": { "type": "local", "url": "http://localhost:8081" },
         "language": "en-US",
