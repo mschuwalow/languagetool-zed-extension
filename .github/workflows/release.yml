@@ -98,7 +98,7 @@ jobs:
       - name: Open update PR
         uses: huacnlee/zed-extension-action@v2
         with:
-          extension-name: languagetool
+          extension-name: languagetool-lsp
           tag: ${{ needs.create-release.outputs.tag }}
           push-to: mschuwalow/zed-extensions
         env:
